@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body style="padding-top: 70px; min-height: 2000px;">
+
+    <div class="container" style="max-width: 900px;">
+    <h3 class="text-muted"></h3>
+        <h1>LaterMess</h1>
+        <p class="lead">An improved personal notebook. You can:
+            <ul>
+                <li>Send notes via email or responsive site</li>
+                <li>Tag notes to organize</li>
+                <li>Set one note as the main current task, send notes to background for not forgetting</li>
+            </ul>
+        </p>
+        <p>
+            <form role="form" action="" method="POST" id="register">
+              <input type="submit" name="connect" id="connect" class="btn btn-lg btn-success btn-block" value="Connect as {{ user.nickname() }}">
+            </form>
+        </p>
+
+    </div> <!-- /container -->
+  </body>
+
+</html>

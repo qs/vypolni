@@ -1,0 +1,82 @@
+{% extends "templates/base.html" %}
+
+{% block title %}
+{% if recently_done %}
+    recently done
+{% elif tag %}
+    {{ tag.title }}
+{% else %}
+    inbox
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if current_message %}
+    current_message.title
+{% endif %}
+
+<h4>background messages</h4>
+
+<h4>open messages</h4>
+
+<h3>
+{% if recently_done %}
+    recently done
+{% elif tag %}
+    {{ tag.title }}
+{% else %}
+    inbox
+{% endif %}
+</h3>
+<button type="button" class="btn btn-link btn-lg btn-block" id="addmessb">
+    Add message
+</button>
+<form role="form" action="" method="POST" style="display: none" id="addmessi">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" id="title" name="title">
+  </div>
+  <div class="form-group">
+    <label for="content">Message:</label>
+    <textarea class="form-control editme" rows="5" id="content" name="content"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="tags">Tags:</label>
+    <input type="text" class="form-control" id="tags" name="tags" value="{% if tag %}{{ tag.title }}{% else %}inbox{% endif %}">
+  </div>
+  <input type="submit" name="addmess" id="addmess" class="btn btn-default" value="Add message">
+</form>
+
+{% if messages %}
+    {% for m in messages %}
+    <div class="well">
+        <h4><a href="/mess/{{ m.key() }}/">{{ m.title }}</a></h4>
+        tags:
+        {% for t in m.get_tags() %}
+            <a href="/tag/{{ t.title }}/">{{ t.title }}</a>,
+        {% endfor %}
+        <p>{{ m.content }}</p>
+    </div>
+    {% endfor %}
+{% endif %}
+
+
+<script type="text/javascript">
+$('#addmessb').click(function() {
+  $('#addmessi').toggle();
+});
+</script>
+{% endblock %}
+
+{% block sidebar %}
+<h4>current message</h4>
+
+<h4>habbits' progressbars</h4>
+
+
+<h4>tags</h4>
+{% for t in person.get_tags() %}
+        <a href="/tag/{{ t.title }}/">{{ t.title }}</a>,
+{% endfor %}
+<h4>actions</h4>
+{% endblock %}
