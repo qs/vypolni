@@ -18,11 +18,9 @@ class BaseHandler(webapp2.RequestHandler):
     def __init__(self, request, response):
         self.initialize(request, response)
         self.user = users.get_current_user()
-        self.person = Person.gql("WHERE user = :1", self.user).get()
 
     def render(self, tpl_file, tvals={}):
         tvals['user'] = self.user
-        tvals['person'] = self.person
         tvals['logout'] = users.create_logout_url("/")
         tpl = jinja_environment.get_template('templates/' + tpl_file + '.html')
         self.response.out.write(tpl.render(tvals))
@@ -32,134 +30,106 @@ class BaseHandler(webapp2.RequestHandler):
 
 
 class WelcodeHandler(BaseHandler):
-    def get(self):  # promo page
-        if self.person:
+    def get(self):
+        if self.user:  # promo page
             self.redirect('/main/')
         else:
             self.render('welcome')
 
-    def post(self):  # register
-        if self.request.get('connect'):
-            person = Person(user=self.user)
-            person.put()
-            Tag.get_or_insert_tag(person, 'inbox')
+
+class JoinHandler(BaseHandler):
+    def post(self):
+        pref = Preference.query(Preference.user==self.user).get()
+        if pref:  # already registered
+            self.redirect('/main/')
+        else:  # register
+            pref = Preference(user=self.user)
+            pref.put()
             self.redirect('/main/')
 
 
 class MainHandler(BaseHandler):
-    def get(self):  # main page
-        messages = self.person.get_open_messages()
-        bg_messages = self.person.get_bg_messages()
-        current_message = self.person.get_current_message()
-        tvals = {
-            'messages': messages,
-            'bg_messages': bg_messages,
-            'current_message': current_message,
+    def get(self):
+        curr = Quest.get_current()
+        bg_cnt, bg_quests = Quest.get_bgs()
+        open_cnt, open_quests = Quest.get_opens()
+        tvars = {
+            'curr': curr,
+            'bg_cnt': bg_cnt,
+            'bg_quests': bg_quests,
+            'open_cnt': open_cnt,
+            'open_quests': open_quests
         }
-        self.render('main', tvals)
+        self.render('main', tvars)
 
-    def post(self):  # post new mess
-        if self.request.get('addmess'):
-            tag_names = re.findall(ur"([a-zA-Z0-9]+)", self.request.get('tags'))
-            tag_keys = [Tag.get_or_insert_tag(self.person, t).key() for t in tag_names]
-            content = self.request.get('content')
-            title = self.request.get('title')
-            mess = Message(person=self.person, tags=tag_keys, content=content, title=title)
-            mess.put()
-            self.redirect('/mess/%s/' % mess.key())
+    def post(self):  # post quest
+        if self.request.get('addquest'):
+            title = escape(self.request.get('title'))
+            tags = escape(self.request.get('tags')).replace(' ', '').split(',')
+            quest = Quest(title=title, user=self.user, tags=tags)
+            key = quest.put()
+            self.redirect('/quest/%s/' % key.id())
 
 
 class SettingsHandler(BaseHandler):
-    def get(self):  # settings page
-        self.render('settings')
+    def get(self):
+        pass
 
-    def post(self):  # save changes
-        self.render('/settings/')
-
-
-class StatsHandler(BaseHandler):
-    def get(self):  # stats page
-        self.render('stats')
+    def post(self):
+        pass
 
 
-class EditMessageHandler(BaseHandler):
-    def get(self, mess_id):  # form for editing
-        mess = Message.gql("WHERE __key__ = :1", db.Key(mess_id)).get()
-        if not mess:
+class QuestHandler(BaseHandler):
+    def get(self, quest_id):
+        quest = Quest.getone(quest_id)
+
+
+    def post(self, quest_id):
+        pass
+
+
+class EditQuestHandler(BaseHandler):
+    def get(self, quest_id):
+        pass
+
+    def post(self, quest_id):
+        quest = Quest.getone(quest_id)
+        if not quest:
             self.redirect('/main/')
-        tvals = {'mess': mess}
-        self.render('edit_mess', tvals)
-
-    def post(self, mess_id):  # submit form & ajax actions
-        mess = Message.gql("WHERE __key__ = :1", db.Key(mess_id)).get()
-        if not mess:
-            self.redirect('/main/')
-        elif self.request.get('ajaxmess'):
-            if self.request.get('setcurr'):
-                mess.set_curr()
-            elif self.request.get('gotobg'):
-                mess.set_bg()
-            elif self.request.get('done'):
-                mess.done()
-            elif self.request.get('upd'):
-                mess.update()
+        elif self.request.get('ajaxquest'):
+            if self.request.get('setstatus'):
+                quest.set_status(self.request.get('setstatus'))
             elif self.request.get('addtag'):
                 tag_name = escape(self.request.get('addtag'))
-                mess.del_tag(tag_name)
+                quest.add_tag(tag_name)
             elif self.request.get('deltag'):
                 tag_name = escape(self.request.get('deltag'))
-                mess.del_tag(tag_name)
+                quest.del_tag(tag_name)
             self.render_json({'result': 1})
-        elif self.request.get('editmess'):  # sumbit form
-            mess.content = self.request.get('content')
-            mess.title = self.request.get('title')
-            mess.save()
-            self.redirect('/mess/%s/' % mess.key())
-        elif self.request.get('delmess'):  # sumbit form
-            mess.remove()
+        elif self.request.get('editquest'):  # sumbit form
+            quest.content = self.request.get('content')
+            quest.title = self.request.get('title')
+            quest.save()
+            self.redirect('/quest/%s/' % quest.key())
+        elif self.request.get('delquest'):  # sumbit form
+            quest.remove()
             self.redirect('/main/')
 
-class MessageHandler(BaseHandler):
-    def get(self, mess_id):  # main page
-        message = Message.gql("WHERE __key__ = :1", db.Key(mess_id)).get()
-        if not message:
-            self.redirect('/main/')
-        tvals = {'message': message}
-        self.render('mess', tvals)
 
+class FilterHandler(BaseHandler):
+    def get(self, filter):
+        pass
 
-class TagHandler(BaseHandler):
-    def get(self, tag_name):  # main page
-        tag = escape(tag_name)
-        key_name = Tag.get_key_name(tag_name, self.person)
-        tag = Tag.get_by_key_name(key_name)
-        if not tag:
-            self.redirect('/main/')
-        else:
-            messages = Message.gql("WHERE tags = :1", tag.key())
-            tvals = {
-                'messages': messages,
-                'tag': tag
-            }
-            self.render('main', tvals)
-
-
-class DoneHandler(BaseHandler):
-    def get(self):  # main page
-        messages = self.person.get_recently_done()
-        tvals = {
-            'messages': messages,
-        }
-        self.render('done', tvals)
+    def post(self, filter):
+        pass
 
 
 app = webapp2.WSGIApplication([
     ('/', WelcodeHandler),
+    ('/join/', JoinHandler),
     ('/main/', MainHandler),
-    ('/done/', DoneHandler),
-    ('/stats/', StatsHandler),
     ('/settings/', SettingsHandler),
-    ('/mess/([A-Za-z0-9\-]+)/', MessageHandler),
-    ('/mess/([A-Za-z0-9\-]+)/edit/', EditMessageHandler),
-    ('/tag/([A-Za-z0-9\-\+]+)/', TagHandler),
+    ('/quest/([A-Za-z0-9\-]+)/', QuestHandler),
+    ('/quest/([A-Za-z0-9\-]+)/edit/', EditQuestHandler),
+    ('/find/([A-Za-z0-9\-\+]+)/', FilterHandler),
 ], debug=True)
