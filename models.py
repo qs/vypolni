@@ -64,19 +64,19 @@ class Quest(BaseModel):
         self.put()
 
     @staticmethod
-    def get_current(self, user):
+    def get_current(user):
         curr = Quest.query(Quest.user==user, Quest.status==QUEST_STATUS_CURRENT).get()
         return curr
 
     @staticmethod
-    def get_bgs(self, user, limit=5):
+    def get_bgs(user, limit=5):
         q = Quest.query(Quest.user==user, Quest.status==QUEST_STATUS_BG)
         cnt = q.count()
         quests = q.order(-Quest.upd_dt).fetch(limit)
         return cnt, quests
 
     @staticmethod
-    def get_opens(self, user, limit=5):
+    def get_opens(user, limit=5):
         q = Quest.query(Quest.user==user, Quest.status==QUEST_STATUS_OPEN)
         cnt = q.count()
         quests = q.order(-Quest.upd_dt).fetch(limit)

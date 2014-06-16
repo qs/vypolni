@@ -38,6 +38,15 @@ class WelcodeHandler(BaseHandler):
 
 
 class JoinHandler(BaseHandler):
+    def get(self):
+        pref = Preference.query(Preference.user==self.user).get()
+        if pref:  # already registered
+            self.redirect('/main/')
+        else:  # register
+            pref = Preference(user=self.user)
+            pref.put()
+            self.redirect('/main/')
+
     def post(self):
         pref = Preference.query(Preference.user==self.user).get()
         if pref:  # already registered
@@ -50,9 +59,9 @@ class JoinHandler(BaseHandler):
 
 class MainHandler(BaseHandler):
     def get(self):
-        curr = Quest.get_current()
-        bg_cnt, bg_quests = Quest.get_bgs()
-        open_cnt, open_quests = Quest.get_opens()
+        curr = Quest.get_current(self.user)
+        bg_cnt, bg_quests = Quest.get_bgs(self.user)
+        open_cnt, open_quests = Quest.get_opens(self.user)
         tvars = {
             'curr': curr,
             'bg_cnt': bg_cnt,
@@ -82,7 +91,7 @@ class SettingsHandler(BaseHandler):
 class QuestHandler(BaseHandler):
     def get(self, quest_id):
         quest = Quest.getone(quest_id)
-
+        self.render('quest', {'quest': quest})
 
     def post(self, quest_id):
         pass
@@ -118,10 +127,11 @@ class EditQuestHandler(BaseHandler):
 
 class FilterHandler(BaseHandler):
     def get(self, filter):
-        pass
+        filter = escape(filter)
+        self.render('filter', {'filter': filter})
 
     def post(self, filter):
-        pass
+        self.render('filter')
 
 
 app = webapp2.WSGIApplication([
@@ -131,5 +141,5 @@ app = webapp2.WSGIApplication([
     ('/settings/', SettingsHandler),
     ('/quest/([A-Za-z0-9\-]+)/', QuestHandler),
     ('/quest/([A-Za-z0-9\-]+)/edit/', EditQuestHandler),
-    ('/find/([A-Za-z0-9\-\+]+)/', FilterHandler),
+    ('/find/([A-Za-z0-9\-\+\=]+)/', FilterHandler),
 ], debug=True)
