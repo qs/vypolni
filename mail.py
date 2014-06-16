@@ -10,23 +10,21 @@ from google.appengine.api.users import User
 
 class LogSenderHandler(InboundMailHandler):
 
-    def parse_subject(self, subject, person):
+    def parse_subject(self, subject):
         tag_names = re.findall(ur"\[([a-zA-Z0-9]+)\]", subject)
         if tag_names == []:
             tag_names = ['inbox', ]
-        tag_keys = [Tag.get_or_insert_tag(person, t).key() for t in tag_names]
         subject = re.sub(ur"(s*\[[a-zA-Z0-9]+\]\s*)", '', subject)
-        return subject, tag_keys
+        return subject, tag_names
 
     def receive(self, message):
         user = User(email=re.findall("([a-zA-Z\.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+)", message.sender)[0])
-        person = Person.gql("WHERE user = :1", user).get()
-        subject, tags = self.parse_subject(message.subject, person)
+        subject, tags = self.parse_subject(message.subject, user)
         content = u""
         for content_type, body in message.bodies('text/html'):
             content += body.decode()
-        mess = Message(title=subject, tags=tags, person=person, content=content)
-        mess.put()
+        quest = Quest(title=subject, tags=tags, person=user, content=content)
+        quest.put()
         logging.info("Received a message from: " + message.sender)
 
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
