@@ -19,11 +19,11 @@ class LogSenderHandler(InboundMailHandler):
 
     def receive(self, message):
         user = User(email=re.findall("([a-zA-Z\.]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+)", message.sender)[0])
-        subject, tags = self.parse_subject(message.subject, user)
+        subject, tags = self.parse_subject(message.subject)
         content = u""
         for content_type, body in message.bodies('text/html'):
             content += body.decode()
-        quest = Quest(title=subject, tags=tags, person=user, content=content)
+        quest = Quest(title=subject, tags=tags, user=user)
         quest.put()
         logging.info("Received a message from: " + message.sender)
 
