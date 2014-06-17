@@ -39,6 +39,7 @@ class Note(BaseModel):
 class Quest(BaseModel):
     user = ndb.UserProperty(required=True)
     title = ndb.StringProperty(required=True)
+    content = ndb.TextProperty()
     tags = ndb.StringProperty(repeated=True)
     dt = ndb.DateTimeProperty(auto_now_add=True)
     upd_dt = ndb.DateTimeProperty(auto_now_add=True)

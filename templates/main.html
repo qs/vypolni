@@ -12,15 +12,41 @@
 bg quests
 <ul>
 {% for q in bg_quests %}
-    <li>{{ q.title }} | {% for t in q.tags %} t {% endfor %}</li>
+    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}</li>
 {% endfor %}
 </ul>
 
 opened quests
 <ul>
 {% for q in open_quests %}
-    <li>{{ q.title }} | {% for t in q.tags %} t {% endfor %}</li>
+    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}</li>
 {% endfor %}
 </ul>
+
+<button type="button" class="btn btn-link btn-lg btn-block" id="addquestb">
+    Add Quest
+</button>
+
+<form role="form" action="" method="POST" style="display: none" id="addquesti">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
+  </div>
+  <div class="form-group">
+    <label for="tags">Tags:</label>
+    <input type="text" class="form-control" id="tags" name="tags" placeholder="comma separated">
+  </div>
+  <div class="form-group">
+    <label for="content"></label>
+    <textarea class="form-control editme" rows="7" id="content" name="content" placeholder="Description if you need"></textarea>
+  </div>
+  <input type="submit" name="addquest" id="addquest" class="btn btn-default" value="Add Quest">
+</form>
+
+<script type="text/javascript">
+$('#addquestb').click(function() {
+  $('#addquesti').toggle();
+});
+</script>
 
 {% endblock %}

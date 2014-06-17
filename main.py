@@ -75,7 +75,8 @@ class MainHandler(BaseHandler):
         if self.request.get('addquest'):
             title = escape(self.request.get('title'))
             tags = escape(self.request.get('tags')).replace(' ', '').split(',')
-            quest = Quest(title=title, user=self.user, tags=tags)
+            content = self.request.get('content')
+            quest = Quest(title=title, user=self.user, tags=tags, content=content)
             key = quest.put()
             self.redirect('/quest/%s/' % key.id())
 
@@ -90,7 +91,7 @@ class SettingsHandler(BaseHandler):
 
 class QuestHandler(BaseHandler):
     def get(self, quest_id):
-        quest = Quest.getone(quest_id)
+        quest = Quest.getone(int(quest_id))
         self.render('quest', {'quest': quest})
 
     def post(self, quest_id):
