@@ -5,23 +5,35 @@
 {% endblock %}
 
 {% block content %}
+<div id="current">
 {% if curr %}
-    {{ curr }}
+    current: {{ curr.title }}
 {% endif %}
+</div>
+
 
 bg quests
+<div id="bg">
 <ul>
 {% for q in bg_quests %}
-    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}</li>
+    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
+    <div class="setcurr btn" id="q{{ q.id }}">setcurr</div>
+    </li>
 {% endfor %}
 </ul>
+</div>
 
 opened quests
+<div id="open">
 <ul>
 {% for q in open_quests %}
-    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}</li>
+    <li>
+        <a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
+        <div class="setcurr btn" id="q{{ q.id }}">setcurr</div>
+    </li>
 {% endfor %}
 </ul>
+</div>
 
 <button type="button" class="btn btn-link btn-lg btn-block" id="addquestb">
     Add Quest
@@ -46,6 +58,36 @@ opened quests
 <script type="text/javascript">
 $('#addquestb').click(function() {
   $('#addquesti').toggle();
+});
+
+function setstatus(quest_id, status) {
+    $.ajax({
+      type: 'POST',
+      data: 'ajaxquest=1&setstatus=' + status,
+      success: function() {
+          alert("s" + String($(this).attr('id')));
+      },
+      error: function(){
+          alert("f" + String($(this).attr('id')));
+      },
+      url: '/quest/' + quest_id + '/edit/',
+      cache:false
+    });
+};
+
+$(function() {
+  $('.setcurr').click(function() {
+    setstatus($(this).attr('id').replace('q', ''), 2);
+  });
+  $('.setclosed').click(function() {
+    setstatus($(this).attr('id').replace('q', ''), 3);
+  });
+  $('.setopen').click(function() {
+    setstatus($(this).attr('id').replace('q', ''), 0);
+  });
+  $('.setbg').click(function() {
+    setstatus($(this).attr('id').replace('q', ''), 1);
+  });
 });
 </script>
 

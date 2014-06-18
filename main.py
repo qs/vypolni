@@ -103,12 +103,13 @@ class EditQuestHandler(BaseHandler):
         pass
 
     def post(self, quest_id):
-        quest = Quest.getone(quest_id)
+        quest = Quest.getone(int(quest_id))
         if not quest:
             self.redirect('/main/')
         elif self.request.get('ajaxquest'):
             if self.request.get('setstatus'):
-                quest.set_status(self.request.get('setstatus'))
+                print self.request.get('setstatus')
+                quest.set_status(int(self.request.get('setstatus')))
             elif self.request.get('addtag'):
                 tag_name = escape(self.request.get('addtag'))
                 quest.add_tag(tag_name)

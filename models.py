@@ -50,10 +50,11 @@ class Quest(BaseModel):
                                           QUEST_STATUS_CURRENT,
                                           QUEST_STATUS_CLOSED])
     finish_dt = ndb.DateTimeProperty()
-    status_history = ndb.JsonProperty()
+    status_history = ndb.JsonProperty(default=[])
 
     def set_status(self, status):
-        if status == QUEST_STATUS_CURRENT:
+        print 'here %s' % status
+        if status == self.status:
             return
         if status == QUEST_STATUS_CURRENT:
             curr = Quest.query(Quest.status==QUEST_STATUS_CURRENT, Quest.user==self.user).get()
