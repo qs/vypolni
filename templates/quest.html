@@ -10,4 +10,11 @@
 
 <p>{{ quest.content }}</p>
 
+<p>
+{% for s in quest.status_history %}
+    {{ s }}
+{% endfor %}
+</p>
+
+
 {% endblock %}

@@ -59,6 +59,7 @@ class Quest(BaseModel):
         if status == QUEST_STATUS_CURRENT:
             curr = Quest.query(Quest.status==QUEST_STATUS_CURRENT, Quest.user==self.user).get()
             if curr:
+                curr.status_history.append({QUEST_STATUS_BG: str(datetime.now())})
                 curr.status = QUEST_STATUS_BG
                 curr.put()
         self.status_history.append({status: str(datetime.now())})
