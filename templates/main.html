@@ -6,9 +6,13 @@
 
 {% block content %}
 <div id="current">
+<ul>
 {% if curr %}
-    current: {{ curr.title }}
+    <li id="q{{ curr.id }}"><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a> | {% for t in curr.tags %} {{ t }} {% endfor %}
+        <div class="setbg btn" id="s{{ curr.id }}">setbg</div>
+    </li>
 {% endif %}
+</ul>
 </div>
 
 
@@ -16,8 +20,9 @@ bg quests
 <div id="bg">
 <ul>
 {% for q in bg_quests %}
-    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
-    <div class="setcurr btn" id="q{{ q.id }}">setcurr</div>
+    <li id="q{{ q.id }}">
+        <a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
+        <div class="setcurr btn" id="s{{ q.id }}">setcurr</div>
     </li>
 {% endfor %}
 </ul>
@@ -27,9 +32,9 @@ opened quests
 <div id="open">
 <ul>
 {% for q in open_quests %}
-    <li>
+    <li id="q{{ q.id }}">
         <a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
-        <div class="setcurr btn" id="q{{ q.id }}">setcurr</div>
+        <div class="setcurr btn" id="s{{ q.id }}">setcurr</div>
     </li>
 {% endfor %}
 </ul>
@@ -65,7 +70,8 @@ function setstatus(quest_id, status) {
       type: 'POST',
       data: 'ajaxquest=1&setstatus=' + status,
       success: function() {
-          alert("s" + String($(this).attr('id')));
+          $("#current").html($('#q'+String(quest_id)));
+          //alert("s" + String($(this).attr('id')));
       },
       error: function(){
           alert("f" + String($(this).attr('id')));
@@ -77,16 +83,16 @@ function setstatus(quest_id, status) {
 
 $(function() {
   $('.setcurr').click(function() {
-    setstatus($(this).attr('id').replace('q', ''), 2);
+    setstatus($(this).attr('id').replace('s', ''), 2);
   });
   $('.setclosed').click(function() {
-    setstatus($(this).attr('id').replace('q', ''), 3);
+    setstatus($(this).attr('id').replace('s', ''), 3);
   });
   $('.setopen').click(function() {
-    setstatus($(this).attr('id').replace('q', ''), 0);
+    setstatus($(this).attr('id').replace('s', ''), 0);
   });
   $('.setbg').click(function() {
-    setstatus($(this).attr('id').replace('q', ''), 1);
+    setstatus($(this).attr('id').replace('s', ''), 1);
   });
 });
 </script>

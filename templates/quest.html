@@ -11,8 +11,8 @@
 <p>{{ quest.content }}</p>
 
 <p>
-{% for s in quest.status_history %}
-    {{ s }}
+{% for status, dt in quest.status_history %}
+    {{ status }} - {{ dt }}
 {% endfor %}
 </p>
 
