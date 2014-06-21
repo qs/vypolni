@@ -5,41 +5,93 @@
 {% endblock %}
 
 {% block content %}
-<div id="current">
-<ul>
-{% if curr %}
-    <li id="q{{ curr.id }}"><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a> | {% for t in curr.tags %} {{ t }} {% endfor %}
-        <div class="setbg btn" id="s{{ curr.id }}">setbg</div>
-    </li>
-{% endif %}
-</ul>
+<h3>Background</h3>
+<div class="column bg" style="background-color: #ddddff;">
+    {% for q in bg_quests %}
+        <div class="portlet" id="q{{ q.id }}">
+            <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
+            <div class="portlet-content">{% if q.tags %}{% for t in q.tags %} {{ t }} {% endfor %}{% endif %}</div>
+        </div>
+    {% endfor %}
+</div>
+<h3>Opened</h3>
+
+<div class="column open" style="background-color: #ddffdd;">
+    {% for q in open_quests %}
+        <div class="portlet" id="q{{ q.id }}">
+            <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
+            <div class="portlet-content">{% if q.tags %}{% for t in q.tags %} {{ t }} {% endfor %}{% endif %}</div>
+        </div>
+    {% endfor %}
 </div>
 
+<script>
+$('#addquestb').click(function() {
+  $('#addquesti').toggle();
+});
 
-bg quests
-<div id="bg">
-<ul>
-{% for q in bg_quests %}
-    <li id="q{{ q.id }}">
-        <a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
-        <div class="setcurr btn" id="s{{ q.id }}">setcurr</div>
-    </li>
-{% endfor %}
-</ul>
+$( ".column" ).sortable({
+    connectWith: ".column",
+    handle: ".portlet-header",
+    cancel: ".portlet-toggle",
+    start: function (event, ui) {
+        ui.item.addClass('tilt');
+        tilt_direction(ui.item);
+    },
+    stop: function (event, ui) {
+        ui.item.removeClass("tilt");
+        $("html").unbind('mousemove', ui.item.data("move_handler"));
+        ui.item.removeData("move_handler");
+        alert( $(this).attr('class') );
+        //alert(String( ui.item) );
+        //alert( event.currentTarget.attr('class') );
+    }
+});
+
+function tilt_direction(item) {
+    var left_pos = item.position().left,
+        move_handler = function (e) {
+            if (e.pageX >= left_pos) {
+                item.addClass("right");
+                item.removeClass("left");
+            } else {
+                item.addClass("left");
+                item.removeClass("right");
+            }
+            left_pos = e.pageX;
+        };
+    $("html").bind("mousemove", move_handler);
+    item.data("move_handler", move_handler);
+}
+
+$( ".portlet" )
+    .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+    .find( ".portlet-header" )
+    .addClass( "ui-widget-header ui-corner-all" )
+    .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+
+$( ".portlet-toggle" ).click(function() {
+    var icon = $( this );
+    icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+    icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+});
+</script>
+
+{% endblock %}
+
+
+{% block sidebar %}
+<h3>Current</h3>
+<div class="column current" style="background-color: #ffdddd;">
+    {% if curr %}
+    <div class="portlet" id="q{{ curr.id }}">
+        <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
+        <div class="portlet-content">{% if curr.tags %}{% for t in curr.tags %} {{ t }} {% endfor %}{% endif %}</div>
+    </div>
+    {% endif %}
 </div>
 
-opened quests
-<div id="open">
-<ul>
-{% for q in open_quests %}
-    <li id="q{{ q.id }}">
-        <a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% for t in q.tags %} {{ t }} {% endfor %}
-        <div class="setcurr btn" id="s{{ q.id }}">setcurr</div>
-    </li>
-{% endfor %}
-</ul>
-</div>
-
+<div class="well">
 <button type="button" class="btn btn-link btn-lg btn-block" id="addquestb">
     Add Quest
 </button>
@@ -59,42 +111,10 @@ opened quests
   </div>
   <input type="submit" name="addquest" id="addquest" class="btn btn-default" value="Add Quest">
 </form>
+</div>
 
-<script type="text/javascript">
-$('#addquestb').click(function() {
-  $('#addquesti').toggle();
-});
-
-function setstatus(quest_id, status) {
-    $.ajax({
-      type: 'POST',
-      data: 'ajaxquest=1&setstatus=' + status,
-      success: function() {
-          $("#current").html($('#q'+String(quest_id)));
-          //alert("s" + String($(this).attr('id')));
-      },
-      error: function(){
-          alert("f" + String($(this).attr('id')));
-      },
-      url: '/quest/' + quest_id + '/edit/',
-      cache:false
-    });
-};
-
-$(function() {
-  $('.setcurr').click(function() {
-    setstatus($(this).attr('id').replace('s', ''), 2);
-  });
-  $('.setclosed').click(function() {
-    setstatus($(this).attr('id').replace('s', ''), 3);
-  });
-  $('.setopen').click(function() {
-    setstatus($(this).attr('id').replace('s', ''), 0);
-  });
-  $('.setbg').click(function() {
-    setstatus($(this).attr('id').replace('s', ''), 1);
-  });
-});
-</script>
+<h3>Done</h3>
+<div class="column done" style="background-color: #dddddd;">
+</div>
 
 {% endblock %}
