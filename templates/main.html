@@ -6,7 +6,7 @@
 
 {% block content %}
 <h3>Background</h3>
-<div class="column bg" style="background-color: #ddddff;">
+<div class="column bg" style="background-color: #ddddff;" id="bg">
     {% for q in bg_quests %}
         <div class="portlet" id="q{{ q.id }}">
             <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
@@ -16,7 +16,7 @@
 </div>
 <h3>Opened</h3>
 
-<div class="column open" style="background-color: #ddffdd;">
+<div class="column" style="background-color: #ddffdd;" id="open">
     {% for q in open_quests %}
         <div class="portlet" id="q{{ q.id }}">
             <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
@@ -29,6 +29,25 @@
 $('#addquestb').click(function() {
   $('#addquesti').toggle();
 });
+
+function setstatus(quest_id, status) {
+    $.ajax({
+      type: 'POST',
+      data: 'ajaxquest=1&setstatus=' + status,
+      success: function() {
+          if (status == 2) { //empty currents
+              // TODO remove from current all except quest_id
+          } else if (status == 3) {  //done quests not displayed
+              $("#done").html($(''));
+          }
+      },
+      error: function(){
+          alert("failed " + quest_id);
+      },
+      url: '/quest/' + quest_id + '/edit/',
+      cache:false
+    });
+};
 
 $( ".column" ).sortable({
     connectWith: ".column",
@@ -44,11 +63,24 @@ $( ".column" ).sortable({
         ui.item.removeData("move_handler");
 
     },
-    remove: function (event, ui) {
-        alert( "removing from" + $(this).attr('class') );
-    },
     receive: function (event, ui) {
-        alert( "add to " + $(this).attr('class') );
+        //alert( "add to " + $(this).attr('class') + " " + $(ui.item).attr("id") );
+        var quest_id = $(ui.item).attr("id").replace('q', '');
+        var status = $(this).attr('id');
+        switch (status) {
+            case 'current':
+                setstatus(quest_id, 2);
+                break;
+            case 'bg':
+                setstatus(quest_id, 1);
+                break;
+            case 'open':
+                setstatus(quest_id, 0);
+                break;
+            case 'done':
+                setstatus(quest_id, 3);
+                break;
+        }
     }
 
 });
@@ -87,7 +119,7 @@ $( ".portlet-toggle" ).click(function() {
 
 {% block sidebar %}
 <h3>Current</h3>
-<div class="column current" style="background-color: #ffdddd;">
+<div class="column current" style="background-color: #ffdddd;"  id="current">
     {% if curr %}
     <div class="portlet" id="q{{ curr.id }}">
         <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
@@ -119,7 +151,7 @@ $( ".portlet-toggle" ).click(function() {
 </div>
 
 <h3>Done</h3>
-<div class="column done" style="background-color: #dddddd;">
+<div class="column" style="background-color: #dddddd;" id="done">
 </div>
 
 {% endblock %}
