@@ -42,10 +42,15 @@ $( ".column" ).sortable({
         ui.item.removeClass("tilt");
         $("html").unbind('mousemove', ui.item.data("move_handler"));
         ui.item.removeData("move_handler");
-        alert( $(this).attr('class') );
-        //alert(String( ui.item) );
-        //alert( event.currentTarget.attr('class') );
+
+    },
+    remove: function (event, ui) {
+        alert( "removing from" + $(this).attr('class') );
+    },
+    receive: function (event, ui) {
+        alert( "add to " + $(this).attr('class') );
     }
+
 });
 
 function tilt_direction(item) {
