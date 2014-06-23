@@ -6,7 +6,7 @@
 
 {% block content %}
 <h3>Background</h3>
-<div class="column bg" style="background-color: #ddddff;" id="bg">
+<div class="column" style="background-color: #ddddff;" id="bg">
     {% for q in bg_quests %}
         <div class="portlet" id="q{{ q.id }}">
             <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
@@ -24,6 +24,20 @@
         </div>
     {% endfor %}
 </div>
+
+{% endblock %}
+
+
+{% block sidebar %}
+<h3>Current</h3>
+<div class="column current" style="background-color: #ffdddd;"  id="current">
+    {% if curr %}
+    <div class="portlet" id="q{{ curr.id }}">
+        <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
+        <div class="portlet-content">{% if curr.tags %}{% for t in curr.tags %} {{ t }} {% endfor %}{% endif %}</div>
+    </div>
+    {% endif %}
+
 
 <script>
 $('#addquestb').click(function() {
@@ -115,18 +129,6 @@ $( ".portlet-toggle" ).click(function() {
 });
 </script>
 
-{% endblock %}
-
-
-{% block sidebar %}
-<h3>Current</h3>
-<div class="column current" style="background-color: #ffdddd;"  id="current">
-    {% if curr %}
-    <div class="portlet" id="q{{ curr.id }}">
-        <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
-        <div class="portlet-content">{% if curr.tags %}{% for t in curr.tags %} {{ t }} {% endfor %}{% endif %}</div>
-    </div>
-    {% endif %}
 </div>
 
 
