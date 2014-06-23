@@ -92,12 +92,8 @@
 
     <div class="container" style="max-width: 1000px;">
         <div class="row">
-          <div class="col-md-6 col-md-push-6">
-              <div class="row">{% block sidebar %}{% endblock %}</div>
-          </div>
-          <div class="col-md-6 col-md-pull-6">
-              <div class="row">{% block content %}{% endblock %}</div>
-          </div>
+          <div class="col-xs-6">{% block content %}{% endblock %}</div>
+          <div class="col-xs-6">{% block sidebar %}{% endblock %}</div>
         </div>
     </div> <!-- /container -->
   </body>
