@@ -9,6 +9,13 @@ QUEST_STATUS_BG = 1
 QUEST_STATUS_CURRENT = 2
 QUEST_STATUS_CLOSED = 3
 
+status_names = {
+    QUEST_STATUS_OPEN: 'opened',
+    QUEST_STATUS_BG: 'background',
+    QUEST_STATUS_CURRENT: 'current',
+    QUEST_STATUS_CLOSED: 'closed',
+}
+
 
 class BaseModel(ndb.Model):
     @classmethod

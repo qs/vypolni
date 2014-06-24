@@ -92,6 +92,11 @@ class SettingsHandler(BaseHandler):
 class QuestHandler(BaseHandler):
     def get(self, quest_id):
         quest = Quest.getone(int(quest_id))
+        quest.statuses = [(status_names[QUEST_STATUS_OPEN], quest.dt.strftime("%Y-%m-%d %H:%M")), ]
+        for statuses in quest.status_history:
+            for k,v in statuses.items():
+                quest.statuses.append( (status_names[int(k)], v[:16]) )
+        print quest.statuses, quest.status_history
         self.render('quest', {'quest': quest})
 
     def post(self, quest_id):

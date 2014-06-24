@@ -10,11 +10,11 @@
 
 <p>{{ quest.content }}</p>
 
-<p>
-{% for status, dt in quest.status_history %}
-    {{ status }} - {{ dt }}
+<p><ul>
+{% for status, dt in quest.statuses %}
+    <li>{{ status }}: {{ dt }}</li>
 {% endfor %}
-</p>
+</ul></p>
 
 
 {% endblock %}
