@@ -10,7 +10,7 @@
     {% for q in bg_quests %}
         <div class="portlet" id="q{{ q.id }}">
             <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
-            <div class="portlet-content">{% if q.tags %}{% for t in q.tags %} {{ t }} {% endfor %}{% endif %}</div>
+            <div class="portlet-content">{% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
         </div>
     {% endfor %}
 </div>
@@ -20,7 +20,7 @@
     {% for q in open_quests %}
         <div class="portlet" id="q{{ q.id }}">
             <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
-            <div class="portlet-content">{% if q.tags %}{% for t in q.tags %} {{ t }} {% endfor %}{% endif %}</div>
+            <div class="portlet-content">{% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
         </div>
     {% endfor %}
 </div>
@@ -34,7 +34,7 @@
     {% if curr %}
     <div class="portlet" id="q{{ curr.id }}">
         <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
-        <div class="portlet-content">{% if curr.tags %}{% for t in curr.tags %} {{ t }} {% endfor %}{% endif %}</div>
+        <div class="portlet-content">{% if curr.tags %}tags: {% for t in curr.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
     </div>
     {% endif %}
 

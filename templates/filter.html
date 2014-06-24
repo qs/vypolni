@@ -1,0 +1,15 @@
+{% extends "templates/base.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+{{ conditions }}
+<hr />
+<ul>
+{% for q in result %}
+    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</li>
+{% endfor %}
+</ul>
+{% endblock %}

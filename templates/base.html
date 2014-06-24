@@ -75,10 +75,8 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            {% if person %}
-            <li><a href="/main/"><span class="glyphicon glyphicon-inbox"></span>
-                Inbox</a></li>
-            {% endif %}
+            <li><a href="/find/status=closed/"><span class="glyphicon glyphicon-inbox"></span>
+                Done</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><p class="navbar-text">{{ user.email() }}</p></li>

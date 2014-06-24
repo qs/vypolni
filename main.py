@@ -134,8 +134,13 @@ class EditQuestHandler(BaseHandler):
 
 class FilterHandler(BaseHandler):
     def get(self, filter):
-        filter = escape(filter)
-        self.render('filter', {'filter': filter})
+        conditions = dict([f.split('=') for f in filter.split('&')])
+        quests = Quest.query()
+        if 'status' in conditions:
+            quests = quests.filter(Quest.status==status_names.keys()[status_names.values().index(conditions['status'])])
+        if 'tag' in conditions:
+            quests = quests.filter(Quest.tags.IN([conditions['tag'], ]))
+        self.render('filter', {'filter': filter, 'conditions': conditions, 'result': quests})
 
     def post(self, filter):
         self.render('filter')
@@ -148,5 +153,5 @@ app = webapp2.WSGIApplication([
     ('/settings/', SettingsHandler),
     ('/quest/([A-Za-z0-9\-]+)/', QuestHandler),
     ('/quest/([A-Za-z0-9\-]+)/edit/', EditQuestHandler),
-    ('/find/([A-Za-z0-9\-\+\=]+)/', FilterHandler),
+    ('/find/([A-Za-z0-9\-\+\=\&]+)/', FilterHandler),
 ], debug=True)
