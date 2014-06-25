@@ -6,22 +6,30 @@
 
 {% block content %}
 <h3>Background</h3>
-<div class="column" style="background-color: #ddddff;" id="bg">
+<div class="column well" style="background-color: #D7D7B8;" id="bg">
     {% for q in bg_quests %}
-        <div class="portlet" id="q{{ q.id }}">
-            <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
-            <div class="portlet-content">{% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
+    <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
+        <div class="portlet-header">
+            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <div class="portlet-content text-muted">
+                {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
+            </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 <h3>Opened</h3>
 
-<div class="column" style="background-color: #ddffdd;" id="open">
+<div class="column well" style="background-color: #BDCDD0;" id="open">
     {% for q in open_quests %}
-        <div class="portlet" id="q{{ q.id }}">
-            <div class="portlet-header"><h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a></h4></div>
-            <div class="portlet-content">{% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
+    <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
+        <div class="portlet-header">
+            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <div class="portlet-content text-muted">
+                {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
+            </div>
         </div>
+    </div>
     {% endfor %}
 </div>
 
@@ -30,11 +38,15 @@
 
 {% block sidebar %}
 <h3>Current</h3>
-<div class="column current" style="background-color: #ffdddd;"  id="current">
+<div class="column well" style="background-color: #8BA6AC;"  id="current">
     {% if curr %}
-    <div class="portlet" id="q{{ curr.id }}">
-        <div class="portlet-header"><h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a></h4></div>
-        <div class="portlet-content">{% if curr.tags %}tags: {% for t in curr.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</div>
+    <div class="portlet bs-callout bs-callout-info" id="q{{ curr.id }}">
+        <div class="portlet-header">
+            <h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a> <small>{{ curr.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <div class="portlet-content text-muted">
+                {% if curr.tags %}tags: {% for t in curr.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
+            </div>
+        </div>
     </div>
     {% endif %}
 
@@ -43,9 +55,9 @@
 
 
 <h3>Done</h3>
-<div class="column" style="background-color: #dddddd;" id="done">
+<div class="column well" style="background-color: #E5E6C9;" id="done">
 </div>
-
+<hr />
 <div class="well">
 <button type="button" class="btn btn-link btn-lg btn-block" id="addquestb">
     Add Quest

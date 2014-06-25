@@ -18,6 +18,36 @@
             });
     </script>
       <style type="text/css">
+        /* Base styles (regardless of theme) */
+        .bs-callout {
+        margin: 5px 0;
+        padding: 15px 30px 15px 15px;
+        border-left: 5px solid #eee;
+        }
+        .bs-callout h4 {
+        margin-top: 0;
+        }
+        .bs-callout p:last-child {
+        margin-bottom: 0;
+        }
+        .bs-callout code,
+        .bs-callout .highlight {
+        background-color: #fff;
+        }
+
+        /* Themes for different contexts */
+        .bs-callout-danger {
+        background-color: #fcf2f2;
+        border-color: #d9534f;
+        }
+        .bs-callout-warning {
+        background-color: #fefbed;
+        border-color: #f0ad4e;
+        }
+        .bs-callout-info {
+        background-color: #f0f7fd;
+        border-color: #5bc0de;
+        }
         .tilt.right {
             transform: rotate(3deg);
             -moz-transform: rotate(3deg);
@@ -32,10 +62,10 @@
             min-width: 520px;
         }
         .column {
-            padding-bottom: 30px;
+            padding-bottom: 60px;
         }
         .portlet {
-            margin: 0 1em 1em 0;
+            /*margin: 0.3em 0.3em 0.3em 0.3em;*/
             padding: 0.3em;
         }
         .portlet-header {
@@ -47,10 +77,7 @@
             position: absolute;
             top: 50%;
             right: 0;
-            margin-top: -8px;
-        }
-        .portlet-content {
-            padding: 0.4em;
+            /*margin-top: -8px;*/
         }
         .portlet-placeholder {
             border: 1px dotted black;

@@ -7,9 +7,15 @@
 {% block content %}
 {{ conditions }}
 <hr />
-<ul>
 {% for q in result %}
-    <li><a href="/quest/{{ q.id }}/">{{ q.title }}</a> | {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/">{{ t }}</a> {% endfor %}{% endif %}</li>
+    <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
+        <div class="portlet-header">
+            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <div class="portlet-content text-muted">
+                {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
+            </div>
+        </div>
+    </div>
 {% endfor %}
-</ul>
+
 {% endblock %}
