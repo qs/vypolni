@@ -76,11 +76,15 @@ class MainHandler(BaseHandler):
     def post(self):  # post quest
         if self.request.get('addquest'):
             title = escape(self.request.get('title'))
-            tags = escape(self.request.get('tags')).replace(' ', '').split(',')
-            content = self.request.get('content')
-            quest = Quest(title=title, user=self.user, tags=tags, content=content)
-            key = quest.put()
-            self.redirect('/quest/%s/' % key.id())
+            if len(title) == 0:
+                self.redirect('/main/')
+            else:
+                tags = escape(self.request.get('tags')).replace(' ', '').split(',')
+                tags = [t for t in tags if len(t) > 0]
+                content = self.request.get('content')
+                quest = Quest(title=title, user=self.user, tags=tags, content=content)
+                key = quest.put()
+                self.redirect('/quest/%s/' % key.id())
 
 
 class SettingsHandler(BaseHandler):
