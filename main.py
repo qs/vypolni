@@ -62,12 +62,14 @@ class MainHandler(BaseHandler):
         curr = Quest.get_current(self.user)
         bg_cnt, bg_quests = Quest.get_bgs(self.user)
         open_cnt, open_quests = Quest.get_opens(self.user)
+        closed_cnt = Quest.get_closed_cnt(self.user)
         tvars = {
             'curr': curr,
             'bg_cnt': bg_cnt,
             'bg_quests': bg_quests,
             'open_cnt': open_cnt,
-            'open_quests': open_quests
+            'open_quests': open_quests,
+            'closed_cnt': closed_cnt,
         }
         self.render('main', tvars)
 

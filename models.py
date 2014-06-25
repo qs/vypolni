@@ -91,3 +91,9 @@ class Quest(BaseModel):
         cnt = q.count()
         quests = q.order(-Quest.upd_dt).fetch(limit)
         return cnt, quests
+
+    @staticmethod
+    def get_closed_cnt(user):
+        q = Quest.query(Quest.user==user, Quest.status==QUEST_STATUS_CLOSED)
+        cnt = q.count()
+        return cnt
