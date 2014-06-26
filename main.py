@@ -141,7 +141,7 @@ class EditQuestHandler(BaseHandler):
 class FilterHandler(BaseHandler):
     def get(self, filter):
         conditions = dict([f.split('=') for f in filter.split('&')])
-        quests = Quest.query().filter(user=self.user)
+        quests = Quest.query().filter(Quest.user==self.user)
         if 'status' in conditions:
             quests = quests.filter(Quest.status==status_names.keys()[status_names.values().index(conditions['status'])])
         if 'tag' in conditions:
