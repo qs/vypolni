@@ -93,7 +93,17 @@ function setstatus(quest_id, status) {
       data: 'ajaxquest=1&setstatus=' + status,
       success: function() {
           if (status == 2) { //empty currents
-              // TODO remove from current all except quest_id
+            var current_cont = "";
+            var bg_cont = "";
+            $( "#current .portlet").each(function( index ) {
+                if ( $(this).attr('id') == ('q' + quest_id) ) {
+                    current_cont = current_cont + '<div class="portlet bs-callout bs-callout-info" id="' + $(this).attr('id') + '">' + $(this).html() + '</div>';
+                } else {
+                    bg_cont = bg_cont + '<div class="portlet bs-callout bs-callout-info" id="' + $(this).attr('id') + '">' + $(this).html() + '</div>';
+                }
+            });
+            $("#bg").append(bg_cont);
+            $("#current").html(current_cont);
           } else if (status == 3) {  //done quests not displayed
               var closed_cnt;
               closed_cnt = parseInt($("#closed_cnt").html());
