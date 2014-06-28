@@ -10,12 +10,47 @@
 {% for q in result %}
     <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
         <div class="portlet-header">
-            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <h4>
+                <a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small>
+                {% if q.status == 3 %} <button type="button" class="btn btn-primary btn-sm reopen" id="o{{ q.id }}">Reopen</button> | <button type="button" class="btn btn-danger btn-sm remove" id="d{{ q.id }}">Remove forever</button> {% endif %}
+            </h4>
             <div class="portlet-content text-muted">
                 {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
             </div>
         </div>
     </div>
 {% endfor %}
+
+
+<script>
+function setstatus(quest_id, status) {
+    $.ajax({
+      type: 'POST',
+      data: 'ajaxquest=1&setstatus=' + status,
+      success: function() {
+          if (status == -1) { // remove completly
+                $( "#q" + quest_id ).remove();
+          } else if (status == 0) {  // reopen
+                $( "#q" + quest_id ).remove();
+          }
+      },
+      error: function(){
+          alert("failed " + quest_id);
+      },
+      url: '/quest/' + quest_id + '/edit/',
+      cache:false
+    });
+};
+
+$( ".reopen" ).click(function() {
+    var quest_id = $(this).attr("id").replace('o', '');
+    setstatus(quest_id, 0);
+});
+$( ".remove" ).click(function() {
+    var quest_id = $(this).attr("id").replace('d', '');
+    setstatus(quest_id, -1);
+});
+
+</script>
 
 {% endblock %}

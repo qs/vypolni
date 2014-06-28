@@ -115,7 +115,7 @@ class EditQuestHandler(BaseHandler):
 
     def post(self, quest_id):
         quest = Quest.getone(int(quest_id))
-        if not quest:
+        if not quest or quest.user != self.user:
             self.redirect('/main/')
         elif self.request.get('ajaxquest'):
             if self.request.get('setstatus'):
@@ -140,12 +140,16 @@ class EditQuestHandler(BaseHandler):
 
 class FilterHandler(BaseHandler):
     def get(self, filter):
-        conditions = dict([f.split('=') for f in filter.split('&')])
+        if not filter:
+            conditions = {}
+        else:
+            conditions = dict([f.split('=') for f in filter.split('&')])
         quests = Quest.query().filter(Quest.user==self.user)
         if 'status' in conditions:
             quests = quests.filter(Quest.status==status_names.keys()[status_names.values().index(conditions['status'])])
         if 'tag' in conditions:
             quests = quests.filter(Quest.tags.IN([conditions['tag'], ]))
+        quests = quests.order()
         self.render('filter', {'filter': filter, 'conditions': conditions, 'result': quests})
 
     def post(self, filter):
@@ -159,5 +163,5 @@ app = webapp2.WSGIApplication([
     ('/settings/', SettingsHandler),
     ('/quest/([A-Za-z0-9\-]+)/', QuestHandler),
     ('/quest/([A-Za-z0-9\-]+)/edit/', EditQuestHandler),
-    ('/find/([A-Za-z0-9\-\+\=\&]+)/', FilterHandler),
+    ('/find/([A-Za-z0-9\-\+\=\&]+)?/?', FilterHandler),
 ], debug=True)

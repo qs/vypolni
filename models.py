@@ -63,15 +63,18 @@ class Quest(BaseModel):
         print 'here %s' % status
         if status == self.status:
             return
-        if status == QUEST_STATUS_CURRENT:
-            curr = Quest.query(Quest.status==QUEST_STATUS_CURRENT, Quest.user==self.user).get()
-            if curr:
-                curr.status_history.append({QUEST_STATUS_BG: str(datetime.now())})
-                curr.status = QUEST_STATUS_BG
-                curr.put()
-        self.status_history.append({status: str(datetime.now())})
-        self.status = status
-        self.put()
+        if status == -1:  # completly remove
+            self.key.delete()
+        else:
+            if status == QUEST_STATUS_CURRENT:
+                curr = Quest.query(Quest.status==QUEST_STATUS_CURRENT, Quest.user==self.user).get()
+                if curr:
+                    curr.status_history.append({QUEST_STATUS_BG: str(datetime.now())})
+                    curr.status = QUEST_STATUS_BG
+                    curr.put()
+            self.status_history.append({status: str(datetime.now())})
+            self.status = status
+            self.put()
 
     @staticmethod
     def get_current(user):
