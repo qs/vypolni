@@ -10,7 +10,7 @@
     {% for q in bg_quests %}
     <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
         <div class="portlet-header">
-            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small> <a href="/quest/{{ q.id }}/edit/" class="btn btn-default btn-xs" role="button">Edit</a> </h4>
             <div class="portlet-content text-muted">
                 {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
             </div>
@@ -24,7 +24,7 @@
     {% for q in open_quests %}
     <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
         <div class="portlet-header">
-            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <h4><a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small> <a href="/quest/{{ q.id }}/edit/" class="btn btn-default btn-xs" role="button">Edit</a> </h4>
             <div class="portlet-content text-muted">
                 {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
             </div>
@@ -42,7 +42,7 @@
     {% if curr %}
     <div class="portlet bs-callout bs-callout-info" id="q{{ curr.id }}">
         <div class="portlet-header">
-            <h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a> <small>{{ curr.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+            <h4><a href="/quest/{{ curr.id }}/">{{ curr.title }}</a> <small>{{ curr.dt.strftime("%Y-%m-%d %H:%M") }}</small> <a href="/quest/{{ curr.id }}/edit/" class="btn btn-default btn-xs" role="button">Edit</a></h4>
             <div class="portlet-content text-muted">
                 {% if curr.tags %}tags: {% for t in curr.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
             </div>
