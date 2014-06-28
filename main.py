@@ -102,16 +102,15 @@ class QuestHandler(BaseHandler):
         for statuses in quest.status_history:
             for k,v in statuses.items():
                 quest.statuses.append( (status_names[int(k)], v[:16]) )
-        print quest.statuses, quest.status_history
         self.render('quest', {'quest': quest})
 
     def post(self, quest_id):
         pass
 
-
 class EditQuestHandler(BaseHandler):
     def get(self, quest_id):
-        pass
+        quest = Quest.getone(int(quest_id))
+        self.render('quest_edit', {'quest': quest})
 
     def post(self, quest_id):
         quest = Quest.getone(int(quest_id))
@@ -131,10 +130,12 @@ class EditQuestHandler(BaseHandler):
         elif self.request.get('editquest'):  # sumbit form
             quest.content = self.request.get('content')
             quest.title = self.request.get('title')
-            quest.save()
-            self.redirect('/quest/%s/' % quest.key())
+            tags = escape(self.request.get('tags')).replace(' ', '').split(',')
+            quest.tags = [t for t in tags if len(t) > 0]
+            quest.put()
+            self.redirect('/quest/%s/' % quest.id)
         elif self.request.get('delquest'):  # sumbit form
-            quest.remove()
+            quest.key.delete()
             self.redirect('/main/')
 
 

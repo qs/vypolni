@@ -1,0 +1,36 @@
+{% extends "templates/base.html" %}
+
+{% block title %}
+Editing {{ quest.title }}
+{% endblock %}
+
+{% block content %}
+
+<form role="form" action="" method="POST" id="addquesti">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" id="title" name="title" value="{{ quest.title }}">
+  </div>
+  <div class="form-group">
+    <label for="tags">Tags:</label>
+    <input type="text" class="form-control" id="tags" name="tags" value="{{ ', '.join(quest.tags) }}">
+  </div>
+  <div class="form-group">
+    <label for="content"></label>
+    <textarea class="form-control editme" rows="7" id="content" name="content" placeholder="Description if you need">
+        {{ quest.content }}
+    </textarea>
+  </div>
+  <input type="submit" name="editquest" id="editquest" class="btn btn-default" value="Edit Quest"> |
+  <input type="submit" name="delquest" id="delquest" class="btn btn-danger" value="Delete Quest">
+</form>
+</div>
+
+<p><ul>
+{% for status, dt in quest.statuses %}
+    <li>{{ status }}: {{ dt }}</li>
+{% endfor %}
+</ul></p>
+
+
+{% endblock %}

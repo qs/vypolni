@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h2>{{ quest.title }}</h2>
+<h2>{{ quest.title }} <a href="/quest/{{ quest.id }}/edit/" class="btn btn-primary btn-sm" role="button">Edit</a></h2>
 
 <p>{{ quest.content }}</p>
 
