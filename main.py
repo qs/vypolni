@@ -95,6 +95,16 @@ class SettingsHandler(BaseHandler):
         pass
 
 
+class InfoHandler(BaseHandler):
+    def get(self):
+        self.render('info')
+
+
+class StatsHandler(BaseHandler):
+    def get(self):
+        pass
+
+
 class QuestHandler(BaseHandler):
     def get(self, quest_id):
         quest = Quest.getone(int(quest_id))
@@ -162,6 +172,8 @@ app = webapp2.WSGIApplication([
     ('/join/', JoinHandler),
     ('/main/', MainHandler),
     ('/settings/', SettingsHandler),
+    ('/info/', InfoHandler),
+    ('/stats/', StatsHandler),
     ('/quest/([A-Za-z0-9\-]+)/', QuestHandler),
     ('/quest/([A-Za-z0-9\-]+)/edit/', EditQuestHandler),
     ('/find/([A-Za-z0-9\-\+\=\&]+)?/?', FilterHandler),

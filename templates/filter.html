@@ -11,9 +11,8 @@
     <div class="portlet bs-callout bs-callout-info" id="q{{ q.id }}">
         <div class="portlet-header">
             <h4>
-                <a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small>
-                {% if q.status == 3 %} <button type="button" class="btn btn-primary btn-sm reopen" id="o{{ q.id }}">Reopen</button> | <button type="button" class="btn btn-danger btn-sm remove" id="d{{ q.id }}">Remove forever</button> {% endif %}
-            </h4>
+                <a href="/quest/{{ q.id }}/">{{ q.title }}</a> <small>{{ q.dt.strftime("%Y-%m-%d %H:%M") }}</small></h4>
+                {% if q.status == 3 %} <button type="button" class="btn btn-primary btn-xs reopen" id="o{{ q.id }}">Reopen</button> | <button type="button" class="btn btn-danger btn-xs remove" id="d{{ q.id }}">Remove forever</button> {% endif %}
             <div class="portlet-content text-muted">
                 {% if q.tags %}tags: {% for t in q.tags %} <a href="/find/tag={{ t }}/" class="btn btn-xs btn-warning">{{ t }}</a> {% endfor %}{% endif %}
             </div>

@@ -32,7 +32,7 @@ class Preference(BaseModel):
     user = ndb.UserProperty(required=True)
     dt = ndb.DateTimeProperty(auto_now_add=True)
     favtags = ndb.StringProperty(repeated=True)
-
+    tag_stats = ndb.JsonProperty(default=[])
 
 class Note(BaseModel):
     user = ndb.UserProperty(required=True)
